@@ -30,6 +30,10 @@ const NOTE_NAMES = [
 export const frequencyToMidi = (frequency: number): number =>
   69 + 12 * Math.log2(frequency / 440)
 
+/** MIDIノート番号→周波数(Hz) */
+export const midiToFrequency = (midi: number): number =>
+  440 * Math.pow(2, (midi - 69) / 12)
+
 export const midiToNoteName = (midi: number): string => {
   const rounded = Math.round(midi)
   const name = NOTE_NAMES[((rounded % 12) + 12) % 12]

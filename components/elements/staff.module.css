@@ -5,8 +5,5 @@
  * 音符記号が文字化けする。ここで明示的に取り戻す。
  */
 .staff :global(text) {
-  font-family:
-    Bravura,
-    Academico,
-    sans-serif !important;
+  font-family: Bravura, Academico, sans-serif !important;
 }

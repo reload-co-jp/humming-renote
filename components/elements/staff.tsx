@@ -16,7 +16,8 @@ const STAVE_HEIGHT = 150
 // 完了を待たずに描画すると符頭等が代替フォントになり文字化けする。
 // FontFace APIはブラウザのみのためuseEffect内(クライアント側)で遅延初期化する。
 let fontsReady: Promise<void> | null = null
-const getFontsReady = () => (fontsReady ??= VexFlow.loadFonts("Bravura", "Academico"))
+const getFontsReady = () =>
+  (fontsReady ??= VexFlow.loadFonts("Bravura", "Academico"))
 
 const drawStaff = (container: HTMLDivElement, noteEvents: NoteEvent[]) => {
   const renderer = new Renderer(container, Renderer.Backends.SVG)
@@ -29,7 +30,7 @@ const drawStaff = (container: HTMLDivElement, noteEvents: NoteEvent[]) => {
 
   const staveNotes = noteEvents.map(
     (event) =>
-      new StaveNote({ keys: [event.vexKey], duration: event.vexDuration }),
+      new StaveNote({ keys: [event.vexKey], duration: event.vexDuration })
   )
   const totalBeats = noteEvents.reduce((sum, event) => sum + event.vexBeats, 0)
 

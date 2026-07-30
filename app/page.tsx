@@ -2,11 +2,13 @@
 
 import { FC } from "react"
 import { useHumming } from "@/hooks/useHumming"
+import { usePlayback } from "@/hooks/usePlayback"
 import { Staff } from "@/components/elements/staff"
 
 const Page: FC = () => {
   const { isRecording, volume, livePitch, noteEvents, error, start, stop } =
     useHumming()
+  const playback = usePlayback()
 
   return (
     <div
@@ -43,10 +45,22 @@ const Page: FC = () => {
       {error && <p style={{ color: "#f66" }}>{error}</p>}
 
       {noteEvents && (
-        <div>
+        <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
           <p>採譜結果 ({noteEvents.length}音)</p>
           {noteEvents.length > 0 ? (
-            <Staff noteEvents={noteEvents} />
+            <>
+              <Staff noteEvents={noteEvents} />
+              <button
+                onClick={() =>
+                  playback.isPlaying
+                    ? playback.stop()
+                    : playback.play(noteEvents)
+                }
+                style={{ width: "fit-content" }}
+              >
+                {playback.isPlaying ? "再生停止" : "再生"}
+              </button>
+            </>
           ) : (
             <p>音程を検出できなかった。もう一度録音してほしい。</p>
           )}
