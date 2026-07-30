@@ -1,0 +1,12 @@
+/*
+ * VexFlowはSVG内の<text>にfont-family属性(SVG presentation attribute)で
+ * Bravura/Academicoを指定するが、presentation attributeは通常のCSSルールより
+ * 優先度が低く、app/reset.cssの `* { font-family: sans-serif }` に上書きされて
+ * 音符記号が文字化けする。ここで明示的に取り戻す。
+ */
+.staff :global(text) {
+  font-family:
+    Bravura,
+    Academico,
+    sans-serif !important;
+}

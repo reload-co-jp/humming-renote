@@ -2,8 +2,8 @@ import { Title } from "@/components/elements/layout"
 import "./reset.css"
 
 export const metadata = {
-  title: "Page title",
-  description: "Page description",
+  title: "humming-renote",
+  description: "鼻歌を録音して楽譜にするアプリ",
 }
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
@@ -18,7 +18,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             position: "relative",
           }}
         >
-          <Title>Page title</Title>
+          <Title>humming-renote</Title>
         </header>
         <main
           style={{

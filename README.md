@@ -1,94 +1,89 @@
-# Next.js Static Site Template
+# humming-renote
 
-Next.js 16 + React 19 + TypeScript を使用した静的サイト生成のテンプレートリポジトリです。GitHub Pages へのデプロイが自動化されています。
+鼻歌を録音し、ピッチ検出で音程解析→五線譜表示するWebアプリ。
+
+## 概要
+
+マイク入力の鼻歌をリアルタイム解析、音高(周波数)を音名/MIDIノートに変換、五線譜として可視化する。作曲メモ・鼻歌採譜の補助ツール。
 
 ## 技術スタック
 
-- **Next.js** 16 - App Router / Static Export
-- **React** 19
-- **TypeScript** 5
-- **ESLint** 9 - Flat Config
-- **Prettier** 3
+- **Next.js 16** (App Router / Static Export) / React 19 / TypeScript 5
+- **Pitchy** - ピッチ検出(基本周波数推定、McLeod Pitch Method)
+- **Web Audio API** - マイク入力取得(`getUserMedia` + `AudioWorklet`/`AnalyserNode`)
+- **VexFlow** - 五線譜レンダリング(SVG)
+- デプロイ: GitHub Pages(静的サイト)
 
-## このテンプレートの使い方
+## 機能要件
 
-1. **「Use this template」ボタン**をクリックして新しいリポジトリを作成
-2. リポジトリをクローン
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
-   cd YOUR_REPO
-   ```
-3. 依存関係をインストール
-   ```bash
-   pnpm install
-   ```
-4. 開発サーバーを起動
-   ```bash
-   pnpm dev
-   ```
+### 1. 録音
 
-## セットアップ後にやること
+- マイク許可取得→録音開始/停止ボタン
+- 録音中は波形/音量メーター表示
 
-### 1. `next.config.js` の修正
+### 2. ピッチ検出
 
-`basePath` をリポジトリ名に変更してください：
+- `AudioContext`でマイク入力をバッファリング、一定間隔(例: 2048サンプル毎)でPitchyの`PitchDetector`に渡し基本周波数(Hz)とクラリティ(信頼度)を取得
+- クラリティ閾値未満(無音・ノイズ)はノート化しない
+- 周波数→MIDIノート番号→音名(例: A4, C#5)へ変換
+- 連続する近似ピッチをまとめ1音符化(オンセット/オフセット検出、最短ノート長でフィルタ)
 
-```js
-basePath: process.env.NODE_ENV === "production" ? "/YOUR_REPO_NAME" : "",
+### 3. 採譜(音符化)
+
+- 検出音列を時系列ノートイベント(音高・開始時刻・長さ)に変換
+- テンポ未指定時は仮テンポ(例: 120BPM)でクオンタイズ、または検出テンポでクオンタイズ
+- 音価は四分音符/八分音符などにスナップ
+
+### 4. 楽譜表示
+
+- VexFlowでノートイベント列を五線譜(ト音記号)にレンダリング
+- 録音と同時にリアルタイム描画、または録音後まとめて描画(両対応が理想、まずは録音後表示から実装)
+
+### 5. 再生・書き出し(拡張)
+
+- 採譜結果をWeb Audio/MIDIで再生確認
+- MusicXML / MIDIファイルエクスポート
+
+## 画面構成
+
+1. トップ画面: 録音開始/停止ボタン、音量メーター、リアルタイムピッチ表示(現在の音名/Hz)
+2. 結果画面: 五線譜表示、再生ボタン、エクスポートボタン
+
+## データフロー
+
+```
+マイク入力
+  → Web Audio API (AudioContext, getUserMedia)
+  → 音声バッファ (Float32Array)
+  → Pitchy PitchDetector.findPitch()
+  → { frequency, clarity }
+  → 音名/MIDIノート変換 + クラリティフィルタ
+  → ノートイベント列 (pitch, startTime, duration)
+  → クオンタイズ
+  → VexFlow描画データ (StaveNote[])
+  → 五線譜SVG表示
 ```
 
-### 2. `app/layout.tsx` の修正
+## ノートイベント構造(案)
 
-メタデータとサイト情報を更新してください：
-
-```tsx
-export const metadata: Metadata = {
-  title: "Your Site Title",
-  description: "Your site description",
+```ts
+type NoteEvent = {
+  midi: number // MIDIノート番号
+  noteName: string // 例: "C4"
+  startTime: number // 秒
+  duration: number // 秒
+  clarity: number // 0-1 検出信頼度
 }
 ```
 
-### 3. GitHub Pages の設定
+## 非機能要件
 
-1. リポジトリの **Settings** → **Pages** へ移動
-2. **Source** を「GitHub Actions」に設定
+- ブラウザのみで完結(バックエンド不要、静的サイトとしてデプロイ)
+- 対応ブラウザ: Web Audio API対応モダンブラウザ(Chrome/Edge/Safari最新版)
+- マイク権限拒否時のエラーハンドリング必須
 
-## ディレクトリ構成
+## 今後の課題
 
-```
-.
-├── app/
-│   ├── layout.tsx      # ルートレイアウト
-│   ├── page.tsx        # ホームページ
-│   └── reset.css       # CSSリセット
-├── .github/
-│   └── workflows/
-│       ├── lint.yml    # リント自動実行
-│       └── deploy.yml  # GitHub Pages 自動デプロイ
-├── next.config.js      # Next.js 設定
-├── tsconfig.json       # TypeScript 設定
-├── eslint.config.mjs   # ESLint 設定
-└── .prettierrc.json    # Prettier 設定
-```
-
-## スクリプト
-
-| コマンド | 説明 |
-|---------|------|
-| `pnpm dev` | 開発サーバーを起動 |
-| `pnpm build` | 静的サイトをビルド（`/out` に出力） |
-| `pnpm lint` | ESLint を実行 |
-| `pnpm format` | Prettier でコードをフォーマット |
-| `pnpm typecheck` | TypeScript の型チェック |
-
-## 機能
-
-- **静的サイト生成** - `next build` で `/out` に HTML を出力
-- **自動デプロイ** - main ブランチへの push で GitHub Pages に自動デプロイ
-- **自動リント** - push 時に ESLint / Prettier チェックを実行
-- **依存関係の自動更新** - Dependabot による週次チェック
-- **エディタ設定** - VS Code での自動フォーマット設定済み
-
-## ライセンス
-
-ISC
+- ピッチ検出精度(ビブラート・裏声の揺れ吸収)
+- テンポ推定・拍子推定の精度
+- 和音非対応(単旋律のみ想定)
