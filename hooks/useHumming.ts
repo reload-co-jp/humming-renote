@@ -9,12 +9,16 @@ const ANALYSER_FFT_SIZE = 2048
 
 export type LivePitch = { noteName: string; frequency: number } | null
 
+const PITCH_HISTORY_LENGTH = 5
+
 export const useHumming = () => {
   const [isRecording, setIsRecording] = useState(false)
   const [volume, setVolume] = useState(0)
   const [livePitch, setLivePitch] = useState<LivePitch>(null)
+  const [pitchHistory, setPitchHistory] = useState<string[]>([])
   const [noteEvents, setNoteEvents] = useState<NoteEvent[] | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const lastHistoryNoteRef = useRef<string | null>(null)
 
   const audioContextRef = useRef<AudioContext | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
@@ -50,14 +54,18 @@ export const useHumming = () => {
         buffer,
         audioContext.sampleRate
       )
-      setLivePitch(
-        clarity > 0.85 && frequency > 0
-          ? {
-              noteName: midiToNoteName(frequencyToMidi(frequency)),
-              frequency,
-            }
-          : null
-      )
+      if (clarity > 0.85 && frequency > 0) {
+        const noteName = midiToNoteName(frequencyToMidi(frequency))
+        setLivePitch({ noteName, frequency })
+        if (noteName !== lastHistoryNoteRef.current) {
+          lastHistoryNoteRef.current = noteName
+          setPitchHistory((prev) =>
+            [...prev, noteName].slice(-PITCH_HISTORY_LENGTH)
+          )
+        }
+      } else {
+        setLivePitch(null)
+      }
 
       rafRef.current = requestAnimationFrame(tick)
     }
@@ -67,6 +75,8 @@ export const useHumming = () => {
   const start = useCallback(async () => {
     setError(null)
     setNoteEvents(null)
+    setPitchHistory([])
+    lastHistoryNoteRef.current = null
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
@@ -131,5 +141,14 @@ export const useHumming = () => {
     }
   }, [stopLiveAnalysis])
 
-  return { isRecording, volume, livePitch, noteEvents, error, start, stop }
+  return {
+    isRecording,
+    volume,
+    livePitch,
+    pitchHistory,
+    noteEvents,
+    error,
+    start,
+    stop,
+  }
 }

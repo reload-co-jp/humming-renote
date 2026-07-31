@@ -7,8 +7,16 @@ import { Staff } from "@/components/elements/staff"
 import styles from "./page.module.css"
 
 const Page: FC = () => {
-  const { isRecording, volume, livePitch, noteEvents, error, start, stop } =
-    useHumming()
+  const {
+    isRecording,
+    volume,
+    livePitch,
+    pitchHistory,
+    noteEvents,
+    error,
+    start,
+    stop,
+  } = useHumming()
   const playback = usePlayback()
 
   return (
@@ -43,6 +51,15 @@ const Page: FC = () => {
           <p className={styles.pitchFreq}>
             {livePitch ? `${livePitch.frequency.toFixed(1)} Hz` : ""}
           </p>
+          {pitchHistory.length > 1 && (
+            <div className={styles.pitchHistory}>
+              {pitchHistory.slice(0, -1).map((note, i) => (
+                <span key={i} className={styles.historyNote}>
+                  {note}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
