@@ -16,7 +16,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         </header>
         <main className={styles.main}>{children}</main>
         <footer className={styles.footer}>
-          <p>&copy; My organization</p>
+          <p>&copy; 株式会社リロード (Reload, Inc.)</p>
         </footer>
       </body>
     </html>
