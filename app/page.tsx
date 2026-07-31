@@ -13,6 +13,17 @@ const Page: FC = () => {
 
   return (
     <div className={styles.page}>
+      <div className={styles.intro}>
+        <p>
+          思いついたメロディー、鼻歌のまま消えちゃうのもったいない。
+          ボタン押して鼻歌歌うだけで、自動で楽譜にしてくれるよ。
+        </p>
+        <p>
+          録音停止すると解析スタート。出てきた楽譜はそのまま再生もできるから、
+          「あ、こんな感じだったな」って確認にも便利。
+        </p>
+      </div>
+
       <button
         className={`${styles.recordButton} ${isRecording ? styles.recording : ""}`}
         onClick={isRecording ? stop : start}

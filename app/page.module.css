@@ -5,6 +5,15 @@
   max-width: 640px;
 }
 
+.intro {
+  color: var(--color-text-muted);
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  gap: 0.5rem;
+  line-height: 1.7;
+}
+
 .recordButton {
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
   border: none;
