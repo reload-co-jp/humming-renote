@@ -39,10 +39,9 @@ const Page: FC = () => {
               style={{ width: `${Math.min(volume * 400, 100)}%` }}
             />
           </div>
-          <p className={styles.pitchLabel}>
-            {livePitch
-              ? `${livePitch.noteName} (${livePitch.frequency.toFixed(1)} Hz)`
-              : "-"}
+          <p className={styles.pitchNote}>{livePitch ? livePitch.noteName : "-"}</p>
+          <p className={styles.pitchFreq}>
+            {livePitch ? `${livePitch.frequency.toFixed(1)} Hz` : ""}
           </p>
         </div>
       )}

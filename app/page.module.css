@@ -63,10 +63,20 @@
   transition: width 0.1s linear;
 }
 
-.pitchLabel {
+.pitchNote {
+  color: var(--color-accent-strong);
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-align: center;
+}
+
+.pitchFreq {
   color: var(--color-text-muted);
   font-size: 0.85rem;
   letter-spacing: 0.04em;
+  text-align: center;
 }
 
 .error {
