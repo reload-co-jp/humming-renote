@@ -1,11 +1,20 @@
 * {
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
   margin: 0;
 }
 
 :root {
-  background: #333;
-  color: #f0f0f0;
+  --color-bg: #14161c;
+  --color-surface: #1c1f28;
+  --color-surface-raised: #22262f;
+  --color-border: rgba(201, 169, 97, 0.22);
+  --color-text: #ece7db;
+  --color-text-muted: #9a978d;
+  --color-accent: #c9a961;
+  --color-accent-strong: #e2c078;
+
+  background: var(--color-bg);
+  color: var(--color-text);
   color-scheme: dark;
 }

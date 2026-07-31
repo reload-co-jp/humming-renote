@@ -1,0 +1,100 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 640px;
+}
+
+.recordButton {
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
+  border: none;
+  border-radius: 2px;
+  color: var(--color-bg);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  padding: 0.75rem 1.75rem;
+  transition: filter 0.2s ease, transform 0.2s ease;
+  width: fit-content;
+}
+
+.recordButton:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.recordButton.recording {
+  background: transparent;
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent-strong);
+}
+
+.meterCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+}
+
+.meterTrack {
+  background: var(--color-surface-raised);
+  border-radius: 2px;
+  height: 4px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.meterFill {
+  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-strong));
+  height: 100%;
+  transition: width 0.1s linear;
+}
+
+.pitchLabel {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.error {
+  color: #d98a8a;
+  font-size: 0.85rem;
+}
+
+.resultCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem;
+}
+
+.resultTitle {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+.playButton {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  padding: 0.5rem 1.25rem;
+  transition: border-color 0.2s ease, color 0.2s ease;
+  width: fit-content;
+}
+
+.playButton:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent-strong);
+}

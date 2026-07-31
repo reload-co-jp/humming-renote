@@ -66,7 +66,14 @@ export const Staff: FC<Props> = ({ noteEvents }) => {
     <div
       ref={containerRef}
       className={styles.staff}
-      style={{ background: "#fff", borderRadius: 4, overflowX: "auto" }}
+      style={{
+        background: "#fdfbf5",
+        border: "1px solid rgba(201, 169, 97, 0.3)",
+        borderRadius: 4,
+        boxShadow: "0 4px 16px rgba(0, 0, 0, 0.25)",
+        overflowX: "auto",
+        padding: "0.5rem",
+      }}
     />
   )
 }
